@@ -21,6 +21,8 @@
     "vite": "^3.1.0"
   },
   "dependencies": {
-    "@capacitor/core": "^4.1.0"
+    "@capacitor/android": "^4.1.0",
+    "@capacitor/core": "^4.1.0",
+    "@capacitor/ios": "^4.1.0"
   }
 }

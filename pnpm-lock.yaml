@@ -1,8 +1,10 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@capacitor/android': ^4.1.0
   '@capacitor/cli': ^4.1.0
   '@capacitor/core': ^4.1.0
+  '@capacitor/ios': ^4.1.0
   '@sveltejs/vite-plugin-svelte': ^1.0.2
   '@tsconfig/svelte': ^3.0.0
   svelte: ^3.49.0
@@ -13,7 +15,9 @@ specifiers:
   vite: ^3.1.0
 
 dependencies:
+  '@capacitor/android': 4.1.0_@capacitor+core@4.1.0
   '@capacitor/core': 4.1.0
+  '@capacitor/ios': 4.1.0_@capacitor+core@4.1.0
 
 devDependencies:
   '@capacitor/cli': 4.1.0
@@ -27,6 +31,14 @@ devDependencies:
   vite: 3.1.0
 
 packages:
+
+  /@capacitor/android/4.1.0_@capacitor+core@4.1.0:
+    resolution: {integrity: sha512-aYHvpYVlS6WC+bG9jJfwqgHMxTw3e8f3taNnl/y9qCjglmMmtFcZWFAVLlOleVK4Q7olSirqjx37f0ppvxRTLg==}
+    peerDependencies:
+      '@capacitor/core': ^4.0.0
+    dependencies:
+      '@capacitor/core': 4.1.0
+    dev: false
 
   /@capacitor/cli/4.1.0:
     resolution: {integrity: sha512-SkMtohfjZS0tJdCtoqugHQIYJ4DowjXk4yQzDFXN3MnhjAKEQmB7QcZY5R8o9NoPMx0ngw2Bzm00e7RdyERvzg==}
@@ -58,6 +70,14 @@ packages:
     resolution: {integrity: sha512-bMYFnC5l5n11D/kLTz9TOOJfUH+nQqYRwzG7h5h4AXIm8aFxH5ZY3iFlDZd7R4xcyrlnfxzfoooSH9trPjRBLA==}
     dependencies:
       tslib: 2.4.0
+    dev: false
+
+  /@capacitor/ios/4.1.0_@capacitor+core@4.1.0:
+    resolution: {integrity: sha512-zkv48Xc5QwdL7TIT4YpXwgISrA5Cuy59KyN+uq3ovr+L/y5SgtKAOg7pATRBYT7CFgFLqkey/PQKcTjbcxhyaA==}
+    peerDependencies:
+      '@capacitor/core': ^4.0.0
+    dependencies:
+      '@capacitor/core': 4.1.0
     dev: false
 
   /@esbuild/linux-loong64/0.15.7:
