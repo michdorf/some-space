@@ -1,9 +1,11 @@
 <script lang="ts">
 import CalendarMock from "../mock/calendar";
-import type {Evento, DateString} from '../types/calendario'
+import type {Evento as EventoT, EventoRaw, DateString} from '../types/calendario'
+import Giorno from "./Giorno.svelte"
+import Intervallo from '../../moduli/intervallo'
 
-  let endDate = new Date();
-  let startDate = new Date(2022,endDate.getMonth()-2);
+  let startDate = new Date(2022,8,7);
+  let endDate = new Date(2022,startDate.getMonth(),startDate.getDate() + 14);
 
   let Calendario;
   if (('plugins' in window) && ('calendar' in (window as any).plugins)) {
@@ -12,18 +14,87 @@ import type {Evento, DateString} from '../types/calendario'
     Calendario = CalendarMock;
   }
 
-  let success = function(message) { alert("Success: " + JSON.stringify(message)); };
   let error = function(message) { alert("Error: " + message); };
 
-  function toDate(str: DateString) {
+  function toDate(str: DateString): Date {
     let m = str.match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):\d{2}/).map((v) => parseInt(v));
     return new Date(m[1], m[2]-1, m[3], m[4], m[5]);
   }
+  function eventiDaRaw(eventi: EventoRaw[]): EventoT[] {
+    return eventi.map((e) => Object.assign(e, {
+      startDate: toDate(e.startDate),
+      endDate: toDate(e.endDate),
+      lastModified: toDate(e.lastModified)
+    }));
+  }
 
-  let eventi: Array<Evento> = [];
-  $: intervalli = eventi.map((valore) => [
-    typeof valore.startDate,
-    /* new Date(valore.endDate).getTime() - new Date(valore.startDate).getTime() */ ]);
+  function giornoIntervallo(d: Date): Intervallo {
+    let start = new Date(d.getTime()), end = new Date(d.getTime());
+    start.setHours(0,0,0,0);
+    end.setHours(23,59,59,999);
+    return new Intervallo(start.getTime(), end.getTime());
+  }
+  function interAData(inter: Intervallo[]): Date[][] {
+    return inter.map(v => [new Date(v.inizio), new Date(v.fine)]);
+  }
+
+  function eventoIntervallo(evento: EventoT): Intervallo {
+    return new Intervallo(evento.startDate.getTime(), evento.endDate.getTime());
+  }
+
+  function spazioLibero(data: Date) {
+    // debugger;
+    let giornoIntero = giornoIntervallo(data);
+    let giorno = giorni.filter(v => v[0].getTime() === giornoIntero.inizio)[0];
+    let spazi: Intervallo[] = [];
+    let eventi = giorno[1];
+    let giornoInter = [];
+    for (let i = 0; i < eventi.length; i++) {
+      let giornus = [];
+      for (let j = 0; j < giornoInter.length; j++) {
+        let tmp: Intervallo[] = Intervallo.sottratti(giornoInter[j], eventoIntervallo(eventi[i]));
+        giornus.push(...tmp);
+      }
+      giornoInter = giornus;
+
+      if (giornoInter.length === 0) {
+        giornoInter = Intervallo.sottratti(giornoIntero, eventoIntervallo(eventi[i]));
+      }
+    }
+
+    if (eventi.length === 0) {
+      spazi.push(...giornoInter);
+    }
+
+    console.log('Intervalli', interAData(giornoInter))
+  }
+
+  let eventi: Array<EventoT> = [];
+  let giorni: Array<[Date, EventoT[]]> = [];
+  $: {
+    let dAtt = startDate;
+    let giornoAtt: Intervallo = giornoIntervallo(dAtt);
+    giorni = [];
+    let giorniTotale = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    for (let i = 0; i < giorniTotale; i++) {
+      let eventiDelGiorno = [];
+      for (let j = 0; j < eventi.length; j++) {
+        if (giornoAtt.sovraponne(eventoIntervallo(eventi[j]))) {
+              eventiDelGiorno.push(eventi[j]);
+        }
+      }
+      giorni.push([new Date(giornoAtt.inizio), eventiDelGiorno]);
+
+      dAtt.setDate(dAtt.getDate() + 1);
+      giornoAtt = giornoIntervallo(dAtt);
+    }
+  }
+  /**
+   * durate Array di durate in secondi
+   */
+  $: durate = eventi.map((valore) => 
+    Math.round((new Date(valore.endDate).getTime() - new Date(valore.startDate).getTime())/1000)
+  );
 
   // list all events in a date range (only supported on Android for now)
   //Calendario.listEventsInRange(startDate,endDate,success,error);
@@ -33,9 +104,9 @@ import type {Evento, DateString} from '../types/calendario'
     // find all _future_ events in the first calendar with the specified name (iOS only for now, this includes a list of attendees (if any))
     console.log("calendari", calendari);
     for (let i = 0; i < calendari.length; i++) {
-        Calendario.findAllEventsInNamedCalendar(calendari[i].name,(evi: Evento[]) => {
-            eventi = [...eventi, ...evi];
-            console.log(toDate(evi[0].startDate))
+        Calendario.findAllEventsInNamedCalendar(calendari[i].name,(evi: EventoRaw[]) => {
+            eventi = [...eventi, ...eventiDaRaw(evi)];
+            console.log("Eventi", evi);
         },error);
     }
   },error);
@@ -43,9 +114,8 @@ import type {Evento, DateString} from '../types/calendario'
 </script>
 
 <h2>Start calendario</h2>
-{#each eventi as evento}
-    <b>{evento.title}</b><br>
-    <i>{evento.startDate}</i><br>
+{#each giorni as giorno}
+  <button on:click={() => spazioLibero(giorno[0])}>Check</button>
+  <Giorno data={giorno[0]} eventi={giorno[1]}></Giorno>
 {/each}
-<br>
-{intervalli[0]}
+

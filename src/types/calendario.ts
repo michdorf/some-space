@@ -1,11 +1,21 @@
 export type DateString = `${number}-${number}-${number} ${number}:${number}:${number}`;
-export interface Evento {
+interface EventoBase {
     id: string; /* uuid */
     title: string;
+    startDate: DateString | Date;
+    endDate: DateString | Date;
+    calendar: string;
+    lastModified: DateString | Date;
+}
+export interface EventoRaw extends EventoBase {
     startDate: DateString;
     endDate: DateString;
-    calendar: string;
     lastModified: DateString;
+}
+export interface Evento extends EventoBase {
+    startDate: Date;
+    endDate: Date;
+    lastModified: Date;
 }
 export interface Calendario {
     id: string;
