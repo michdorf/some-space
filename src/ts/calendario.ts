@@ -6,6 +6,9 @@ function interAData(inter: Intervallo[]): Date[][] {
   }
 
 export function eventoIntervallo(evento: Evento): Intervallo {
+    if (typeof evento.startDate !== "object" || typeof evento.endDate !== "object") {
+      console.warn("Non evento intervallo",evento);
+    }
     return new Intervallo(evento.startDate.getTime(), evento.endDate.getTime());
   }
   
