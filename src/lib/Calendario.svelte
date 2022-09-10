@@ -1,6 +1,6 @@
 <script lang="ts">
 import CalendarMock from "../mock/calendar";
-import type {Evento as EventoT, EventoRaw, DateString} from '../types/calendario'
+import type {Evento as EventoT, EventoRaw, DateString, OldDateString} from '../types/calendario'
 import Giorno from "./Giorno.svelte"
 import type Intervallo from "moduli/intervallo";
 import {giornoIntervallo, eventoIntervallo} from '../ts/calendario'
@@ -17,16 +17,21 @@ import {giornoIntervallo, eventoIntervallo} from '../ts/calendario'
 
   let error = function(message) { alert("Error: " + message); };
 
-  function toDate(str: DateString): Date {
-    let m = str.match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):\d{2}/).map((v) => parseInt(v));
+  function toDate(str: DateString | OldDateString): Date {
+    let m = str.match(/(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2}):\d{2}/).map((v) => parseInt(v));
     return new Date(m[1], m[2]-1, m[3], m[4], m[5]);
   }
   function eventiDaRaw(eventi: EventoRaw[]): EventoT[] {
-    return eventi.map((e) => Object.assign(e, {
-      startDate: toDate(e.startDate),
-      endDate: toDate(e.endDate),
-      lastModified: toDate(e.lastModified)
-    }));
+    return eventi.map((e) => {
+      let t: {startDate: Date, endDate: Date, lastModified?: Date} = {
+        startDate: toDate(e.startDate),
+        endDate: toDate(e.endDate),
+      };
+      if ('lastModified' in e) {
+        t.lastModified = toDate(e.lastModified)
+      }
+      return Object.assign(e, t);
+    });
   }
 
   let eventi: Array<EventoT> = [];
