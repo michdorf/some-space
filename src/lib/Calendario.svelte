@@ -2,7 +2,8 @@
 import CalendarMock from "../mock/calendar";
 import type {Evento as EventoT, EventoRaw, DateString} from '../types/calendario'
 import Giorno from "./Giorno.svelte"
-import Intervallo from '../../moduli/intervallo'
+import type Intervallo from "moduli/intervallo";
+import {giornoIntervallo, eventoIntervallo} from '../ts/calendario'
 
   let startDate = new Date(2022,8,7);
   let endDate = new Date(2022,startDate.getMonth(),startDate.getDate() + 14);
@@ -26,47 +27,6 @@ import Intervallo from '../../moduli/intervallo'
       endDate: toDate(e.endDate),
       lastModified: toDate(e.lastModified)
     }));
-  }
-
-  function giornoIntervallo(d: Date): Intervallo {
-    let start = new Date(d.getTime()), end = new Date(d.getTime());
-    start.setHours(0,0,0,0);
-    end.setHours(23,59,59,999);
-    return new Intervallo(start.getTime(), end.getTime());
-  }
-  function interAData(inter: Intervallo[]): Date[][] {
-    return inter.map(v => [new Date(v.inizio), new Date(v.fine)]);
-  }
-
-  function eventoIntervallo(evento: EventoT): Intervallo {
-    return new Intervallo(evento.startDate.getTime(), evento.endDate.getTime());
-  }
-
-  function spazioLibero(data: Date) {
-    // debugger;
-    let giornoIntero = giornoIntervallo(data);
-    let giorno = giorni.filter(v => v[0].getTime() === giornoIntero.inizio)[0];
-    let spazi: Intervallo[] = [];
-    let eventi = giorno[1];
-    let giornoInter = [];
-    for (let i = 0; i < eventi.length; i++) {
-      let giornus = [];
-      for (let j = 0; j < giornoInter.length; j++) {
-        let tmp: Intervallo[] = Intervallo.sottratti(giornoInter[j], eventoIntervallo(eventi[i]));
-        giornus.push(...tmp);
-      }
-      giornoInter = giornus;
-
-      if (giornoInter.length === 0) {
-        giornoInter = Intervallo.sottratti(giornoIntero, eventoIntervallo(eventi[i]));
-      }
-    }
-
-    if (eventi.length === 0) {
-      spazi.push(...giornoInter);
-    }
-
-    console.log('Intervalli', interAData(giornoInter))
   }
 
   let eventi: Array<EventoT> = [];
@@ -115,7 +75,6 @@ import Intervallo from '../../moduli/intervallo'
 
 <h2>Start calendario</h2>
 {#each giorni as giorno}
-  <button on:click={() => spazioLibero(giorno[0])}>Check</button>
   <Giorno data={giorno[0]} eventi={giorno[1]}></Giorno>
 {/each}
 
