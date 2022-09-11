@@ -45,7 +45,6 @@ function eventiDaRaw(eventi: EventoRaw[]): EventoT[] {
 let eventi: Array<EventoT> = [];
 let giorni: Array<[Date, EventoT[]]> = [];
 $: {
-
   let dAtt = dataInizio();
   let giornoAtt: Intervallo = giornoIntervallo(dAtt);
   giorni = [];
@@ -74,8 +73,13 @@ $: durate = eventi.map((valore) =>
 // list all events in a date range (only supported on Android for now)
 //Calendario.listEventsInRange(startDate,endDate,success,error);
 
+Calendario.findEvent('','','',dataInizio,dataFine,(even: EventoRaw[]) => {
+  eventi = [...eventi, ...eventiDaRaw(even)];
+  console.log("Step eventi:",eventiDaRaw(even));
+},error);
+
 // list all calendar names - returns this JS Object to the success callback: [{"id":"1", "name":"first"}, ..]
-Calendario.listCalendars((calendari: CalendarioT[]) => {
+/* Calendario.listCalendars((calendari: CalendarioT[]) => {
   // find all _future_ events in the first calendar with the specified name (iOS only for now, this includes a list of attendees (if any))
   console.log("calendari", calendari);
   for (let i = 0; i < calendari.length; i++) {
@@ -84,7 +88,7 @@ Calendario.listCalendars((calendari: CalendarioT[]) => {
           console.log("Step eventi:",eventiDaRaw(evi));
       },error);
   }
-},error);
+},error); */
 
 </script>
 
