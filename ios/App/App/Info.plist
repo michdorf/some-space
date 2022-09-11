@@ -4,6 +4,15 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>it_IT</string>
+	<key>CFBundleLocalizations</key>
+    <array>
+       <string>en</string>
+       <string>de</string>
+       <string>nl</string>
+       <string>fr</string>
+       <string>it</string>
+       <string>pt-BR</string>
+    </array>
 	<key>CFBundleDisplayName</key>
 	<string>some-space</string>
 	<key>CFBundleExecutable</key>
@@ -45,6 +54,8 @@
 	</array>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Devo almeno fare un piano</string>
+	<key>NSContactsUsageDescription</key>
+    <string>$CONTACTS_USAGE_DESCRIPTION</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 </dict>
