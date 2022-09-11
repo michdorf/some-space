@@ -1,8 +1,22 @@
 import type { Calendario, EventoRaw } from "../types/calendario";
 
+export interface CalendarioPlugin {
+    listCalendars: (callback: (calendari: Calendario[]) => void, error: ErrorFunz) => void;
+
+    findEvent: (title: string,eventLocation: string,notes: string,startDate: Date,endDate: Date,callback: (evi: EventoRaw[]) => void,error: ErrorFunz) => void
+
+    /**
+     * Obs. only future events on iOS
+     * @param calendarId 
+     * @param callback 
+     * @param error 
+     */
+    findAllEventsInNamedCalendar(calendarId: string, callback: (evi: EventoRaw[]) => void, error: ErrorFunz)
+}
+
 type ErrorFunz = (message: string) => unknown;
 
-class CalendarMock {
+class CalendarMock implements CalendarioPlugin {
     calendari: Calendario[] = [
         {
             id: crypto.randomUUID(),
@@ -17,7 +31,7 @@ class CalendarMock {
     ];
 
     listCalendars(callback: (calendari: Calendario[]) => void, error: ErrorFunz) {
-        if (typeof callback == 'function') { callback(this.calendari); }
+        if (typeof callback == 'function') { setTimeout(() => callback(this.calendari), 600); }
     }
 
     findEvent(title: string,eventLocation: string,notes: string,startDate: Date,endDate: Date,callback: (evi: EventoRaw[]) => void,error: ErrorFunz) {
@@ -65,8 +79,7 @@ class CalendarMock {
             }
         ];
 
-        if (typeof callback == 'function') { callback(eventi); }
-
+        if (typeof callback == 'function') { setTimeout(() => callback(eventi), 600) }
     }
 
     /**
@@ -121,7 +134,7 @@ class CalendarMock {
             }
         ];
 
-        if (typeof callback == 'function') { callback(eventi); }
+        if (typeof callback == 'function') { setTimeout(() => callback(eventi), 600); }
     }
 }
 

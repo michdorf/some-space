@@ -1,11 +1,12 @@
 <script lang="ts">
 import CalendarMock from "../mock/calendar";
+import type {CalendarioPlugin} from "../mock/calendar";
 import type {Evento as EventoT, Calendario as CalendarioT, EventoRaw, DateString, OldDateString} from '../types/calendario'
 import Giorno from "./Giorno.svelte"
 import type Intervallo from "moduli/intervallo";
 import {giornoIntervallo, eventoIntervallo} from '../ts/calendario'
 
-let Calendario;
+let Calendario: CalendarioPlugin;
 if (('plugins' in window) && ('calendar' in (window as any).plugins)) {
   Calendario = (window as any).plugins.calendar;
 } else {
@@ -73,7 +74,7 @@ $: durate = eventi.map((valore) =>
 // list all events in a date range (only supported on Android for now)
 //Calendario.listEventsInRange(startDate,endDate,success,error);
 
-Calendario.findEvent('','','',dataInizio,dataFine,(even: EventoRaw[]) => {
+Calendario.findEvent('','','',dataInizio(),dataFine(),(even: EventoRaw[]) => {
   eventi = [...eventi, ...eventiDaRaw(even)];
   console.log("Step eventi:",eventiDaRaw(even));
 },error);
@@ -93,7 +94,6 @@ Calendario.findEvent('','','',dataInizio,dataFine,(even: EventoRaw[]) => {
 </script>
 
 <h2>Start calendario</h2>
-<h3>{JSON.stringify(eventi)}</h3>
 {#each giorni as giorno}
   <Giorno data={giorno[0]} eventi={giorno[1]}></Giorno>
 {/each}

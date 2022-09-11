@@ -3,13 +3,13 @@ import { tempoLibero } from "../ts/calendario";
 
     import type { Evento as EventoT } from "../types/calendario";
     import Evento from "./Evento.svelte";
-import TempoLibero from "./TempoLibero.svelte";
+    import TempoLibero from "./TempoLibero.svelte";
 
     export let eventi: EventoT[];
     export let data: Date;
 
-    let tempo = tempoLibero(data, eventi);
-    let tEventi: EventoT[] = tempo.map(v => {
+    $: tempo = tempoLibero(data, eventi);
+    $: tEventi = tempo.map(v => {
       return {
         id: crypto.randomUUID(),
         title: 'Tempo libero',
@@ -20,7 +20,7 @@ import TempoLibero from "./TempoLibero.svelte";
       }
     });
 
-    let eventiUniti = [...eventi, ...tEventi].sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
+    $: eventiUniti = eventi.concat(tEventi).sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
 </script>
 
 <div class="data">{data.toLocaleDateString()}</div>
