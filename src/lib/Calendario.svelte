@@ -12,6 +12,9 @@ if (('plugins' in window) && ('calendar' in (window as any).plugins)) {
   Calendario = CalendarMock;
 }
 
+let dataInizio = () => new Date(2022,8,7);
+let dataFine = () => new Date(2022,dataInizio().getMonth(),dataInizio().getDate() + 14);
+
 let error = function(message) { alert("Error: " + message); };
 
 function toDate(str: DateString | OldDateString): Date {
@@ -42,13 +45,11 @@ function eventiDaRaw(eventi: EventoRaw[]): EventoT[] {
 let eventi: Array<EventoT> = [];
 let giorni: Array<[Date, EventoT[]]> = [];
 $: {
-  let startDate = new Date(2022,8,7);
-  let endDate = new Date(2022,startDate.getMonth(),startDate.getDate() + 14);
 
-  let dAtt = startDate;
+  let dAtt = dataInizio();
   let giornoAtt: Intervallo = giornoIntervallo(dAtt);
   giorni = [];
-  let giorniTotale = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+  let giorniTotale = Math.ceil((dataFine().getTime() - dataInizio().getTime()) / (1000 * 60 * 60 * 24));
   for (let i = 0; i < giorniTotale; i++) {
     let eventiDelGiorno = [];
     for (let j = 0; j < eventi.length; j++) {
