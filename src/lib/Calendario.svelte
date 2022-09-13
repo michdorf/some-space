@@ -13,7 +13,8 @@ if (('plugins' in window) && ('calendar' in (window as any).plugins)) {
   Calendario = CalendarMock;
 }
 
-let dataInizio = () => new Date(2022,8,7);
+const oggi_d = new Date();
+let dataInizio = () => new Date(oggi_d.getFullYear(),oggi_d.getMonth(),oggi_d.getDate());
 let dataFine = () => new Date(2022,dataInizio().getMonth(),dataInizio().getDate() + 14);
 
 let error = function(message) { alert("Error: " + message); };
