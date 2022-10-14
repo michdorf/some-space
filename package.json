@@ -24,6 +24,7 @@
     "@capacitor/android": "^4.1.0",
     "@capacitor/core": "^4.1.0",
     "@capacitor/ios": "^4.1.0",
+    "@doist/todoist-api-typescript": "^2.1.0",
     "cordova-plugin-calendar": "^5.1.6"
   }
 }

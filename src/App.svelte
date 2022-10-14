@@ -1,9 +1,15 @@
 <script lang="ts">
   import Calendario from './lib/Calendario.svelte';
+  import SvelteImpostazioni from './lib/todoist/Impostazioni.svelte'
+  import tasks from './ts/todoist'
 </script>
 
 <main>
   <h1>Vite + Svelte</h1>
+  <SvelteImpostazioni />
+
+  {$tasks}
+
   <Calendario></Calendario>
 
   <p>
