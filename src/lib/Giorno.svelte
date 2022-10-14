@@ -7,27 +7,13 @@ import { tempoLibero } from "../ts/calendario";
 
     export let eventi: EventoT[];
     export let data: Date;
-
-    $: tempo = tempoLibero(data, eventi);
-    $: tEventi = tempo.map(v => {
-      return {
-        id: crypto.randomUUID(),
-        title: 'Tempo libero',
-        calendar: 'tempo_libero',
-        startDate: v[0],
-        endDate: v[1],
-        lastModified: new Date(0)
-      }
-    });
-
-    $: eventiUniti = eventi.concat(tEventi).sort((a, b) => a.startDate.getTime() - b.startDate.getTime());
 </script>
 
 <div class="data">{data.toLocaleDateString()}</div>
 {#if eventi.length < 1}
   <p style="font-style: italic;">Ingen begivenheder</p>
 {/if}
-{#each eventiUniti as evento}
+{#each eventi as evento}
   {#if evento.calendar === 'tempo_libero'}
   <TempoLibero evento={evento}></TempoLibero>
   {:else}

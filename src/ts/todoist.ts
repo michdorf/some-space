@@ -11,13 +11,23 @@ impostazioni.subscribe((v) => {
 });
 export function fetchTasks() {
     let tt = [];
-    for (let i = 0; i < activeProjs.length; i++) {
+
+    const loop = function (i: number) {
+        if (i >= activeProjs.length){
+            tasks.set(tt);
+            return;
+        }
+
         api.getTasks({ projectId: activeProjs[i]})
-            .then((tasks) => tt.push(tasks))
+            .then((taskAr) => {
+                tt = [...tt, ...taskAr]
+                loop(++i);
+            })
             .catch((error) => console.log(error))
     }
 
-    tasks.set(tt);
+    loop(0);
 }
 
-export default tasks;
+export { tasks };
+export default api;

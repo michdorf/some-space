@@ -41,8 +41,8 @@ class CalendarMock implements CalendarioPlugin {
                 id: crypto.randomUUID(),
                 title: 'Først event',
                 calendar: 'calendar 1',
-                startDate: '2022-09-08T09:00:00.000Z',
-                endDate: '2022-09-08T10:30:00.000Z',
+                startDate: '2022-10-14T09:00:00.000Z',
+                endDate: '2022-10-14T10:30:00.000Z',
                 lastModified: '2022-09-08 09:00:00'
             },
             {
