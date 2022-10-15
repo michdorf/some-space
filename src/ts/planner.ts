@@ -41,7 +41,6 @@ class Planner {
         }
 
         this.agg(ptask);
-        debugger;
         this.pianifica(ptask);
     }
 
@@ -74,7 +73,6 @@ class Planner {
 
     pianifica(piano: Planable) {
         for (let i = 0; i < this.tempiLibero.length; i++) {
-            debugger;
             if (durata(this.tempiLibero[i][0], this.tempiLibero[i][1]) >= piano.durata) {
                 aggEvento({
                     id: piano.id,
@@ -83,6 +81,7 @@ class Planner {
                     startDate: this.tempiLibero[i][0],
                     endDate: new Date(this.tempiLibero[i][1].getTime() + piano.durata*60000),
                 });
+                break;
             }
         }
         console.log("Avrebbe pianificato", piano);
