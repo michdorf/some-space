@@ -1,3 +1,4 @@
+import type Orari from 'src/types/orari';
 import Intervallo from '../../moduli/intervallo'
 import type {Evento} from '../types/calendario'
 
@@ -19,7 +20,7 @@ export function giornoIntervallo(d: Date): Intervallo {
     return new Intervallo(start.getTime(), end.getTime());
   }
 
-export function tempoLibero(data, eventi: Evento[]): Date[][] {
+export function tempoLibero(data, eventi: Evento[], orariDiLavoro?: Orari): Date[][] {
     let giornoIntero = giornoIntervallo(data);
     let giornoInter = [];
     for (let i = 0; i < eventi.length; i++) {

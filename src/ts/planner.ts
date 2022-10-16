@@ -79,7 +79,7 @@ class Planner {
                     calendar: "tasks",
                     title: piano.titolo,
                     startDate: this.tempiLibero[i][0],
-                    endDate: new Date(this.tempiLibero[i][1].getTime() + piano.durata*60000),
+                    endDate: new Date(this.tempiLibero[i][0].getTime() + piano.durata*60000),
                 });
                 break;
             }
