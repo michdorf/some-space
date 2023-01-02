@@ -18,8 +18,7 @@ export function toDate(str: DateString | OldDateString): Date {
             console.error("str not valid date");
         }
     }
-    let m = str.match(/(\d{4})-(\d{2})-(\d{2})([ T](\d{2}):(\d{2}):\d{2})?/).map((v) => parseInt(v));
-    return new Date(m[1], m[2] - 1, m[3], m[5] || 0, m[6] || 0);
+    return new Date(Date.parse(str));
 }
 
 export function eventiDaRaw(eventi: EventoRaw[]): EventoT[] {
